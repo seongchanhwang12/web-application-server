@@ -1,5 +1,9 @@
 package util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.RequestHandler;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class IOUtils {
+    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     /**
      * @param BufferedReader는
@@ -25,6 +30,7 @@ public class IOUtils {
     public static byte [] readRequestBody(String pageUrl) throws IOException {
         String path = "./webapp" + pageUrl;
         File file = new File(path);
+        log.info("path={}",path);
         if(file.exists()){
             return Files.readAllBytes(file.toPath());
         }
