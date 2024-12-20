@@ -42,6 +42,10 @@ public class HttpRequestUtils {
     }
 
     public static String parseRequestedPage(CharSequence requestMessage){
+        if(requestMessage==null){
+            log.info("확인");
+            return "";
+        }
         String s = requestMessage.toString().split(" ")[1];
         log.info("[parseRequestedPage] pageUrl ={}", s );
         return s;

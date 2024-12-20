@@ -2,6 +2,7 @@ package webserver;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,8 @@ public class WebServer {
                 RequestHandler requestHandler = new RequestHandler(connection);
                 requestHandler.start();
             }
+        } catch (SocketException e) {
+            e.printStackTrace();
         }
     }
 }

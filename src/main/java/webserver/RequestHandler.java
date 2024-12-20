@@ -27,9 +27,9 @@ public class RequestHandler extends Thread {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             StringBuilder sb = new StringBuilder();
             String line;
-            while ((line = br.readLine()) != null ){
+            while ((line = br.readLine()) != null && !line.isEmpty()){
                 sb.append(line).append("\n");
-
+                log.info("무한루프 확인");
             }
 
             String pageUrl = parseRequestedPage(sb);
