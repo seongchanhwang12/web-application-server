@@ -21,38 +21,39 @@ public class RequestHandler extends Thread {
     public void run() {
         log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
-        DataOutputStream dos= null ;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-             OutputStream out = connection.getOutputStream()) {
+             OutputStream out = connection.getOutputStream();
+              DataOutputStream dos = new DataOutputStream(out)
+        ) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null && !line.isEmpty()){
-                sb.append(line).append("\n");
-                log.info("무한루프 확인");
-            }
-
-            String pageUrl = parseRequestedPage(sb);
-            log.info("pageUrl = {}", pageUrl);
-
-            byte[] body = readRequestBody(pageUrl);
-
-            dos = new DataOutputStream(out);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            handleRequest(dos, br);
 
         } catch (IOException e) {
             log.error(e.getMessage());
-
-        } finally {
-            try {
-                if (dos != null) {
-                    dos.close();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }
+    }
+    private void handleRequest(DataOutputStream dos, BufferedReader br ) throws IOException {
+        StringBuilder request = readRequest(br);
+
+        String pageUrl = parseRequestedPage(request);
+
+        byte[] body = readRequestBody(pageUrl);
+        sendResponse(dos, body);
+    }
+
+    private void sendResponse(DataOutputStream dos, byte[] body){
+        response200Header(dos, body.length);
+        responseBody(dos, body);
+
+    }
+
+    private StringBuilder readRequest(BufferedReader br ) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null && !line.isEmpty()){
+            sb.append(line).append("\n");
+        }
+        return sb;
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
