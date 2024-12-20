@@ -36,6 +36,10 @@ public class HttpRequestUtils {
                 .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
     }
 
+    public static String parseRequestedPage(CharSequence requestMessage){
+        return requestMessage.toString().split(" ")[1];
+    }
+
     static Pair getKeyValue(String keyValue, String regex) {
         if (Strings.isNullOrEmpty(keyValue)) {
             return null;

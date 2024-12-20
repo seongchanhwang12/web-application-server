@@ -9,7 +9,16 @@ import org.junit.Test;
 
 import util.HttpRequestUtils.Pair;
 
+
 public class HttpRequestUtilsTest {
+
+    @Test
+    public void parseRequestedPage() {
+        String httpRequestMessage = "GET /index.html HTTP/1.1\nHost: localhost:8080\nConnection: keep-alive\nAccept: */*";
+        String index = HttpRequestUtils.parseRequestedPage(httpRequestMessage);
+
+        assertThat(index, is("/index.html"));
+    }
     @Test
     public void parseQueryString() {
         String queryString = "userId=javajigi";
