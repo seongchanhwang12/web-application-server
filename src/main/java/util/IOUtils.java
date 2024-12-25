@@ -1,5 +1,7 @@
 package util;
 
+import com.google.common.base.Strings;
+import exception.PageNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.RequestHandler;
@@ -14,10 +16,8 @@ public class IOUtils {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     /**
-     * @param BufferedReader는
-     *            Request Body를 시작하는 시점이어야
-     * @param contentLength는
-     *            Request Header의 Content-Length 값이다.
+     * @param BufferedReader 는 Request Body를 시작하는 시점이어야
+     * @param contentLength 는 request Header의 Content-Length 값이다.
      * @return
      * @throws IOException
      */
@@ -27,15 +27,19 @@ public class IOUtils {
         return String.copyValueOf(body);
     }
 
-    public static byte [] readRequestBody(String pageUrl) throws IOException {
-        String path = "./webapp" + pageUrl;
-        File file = new File(path);
-        log.info("path={}",path);
+    public static byte [] readRequestBody(String path) throws IOException {
+        if(Strings.isNullOrEmpty(path)){
+            throw new IllegalArgumentException("path is null or Empty" + path );
+        }
+
+        File file = new File("./webapp" + path);
+
         if(file.exists()){
             return Files.readAllBytes(file.toPath());
         }
 
-        throw new FileNotFoundException("경로에 해당하는 파일이 없습니다." + path );
+        throw new PageNotFoundException("page not found : " + path  );
 
     }
+
 }

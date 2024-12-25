@@ -1,21 +1,34 @@
 package util;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import model.RequestURI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.RequestHandler;
 
 public class HttpRequestUtils {
-    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpRequestUtils.class);
 
+    public static Map<String,String> parseUrl(String url){
+        int index = url.indexOf("?");
+        String path = url.substring(0, index);
+        String queryString = url.substring(index+1);
+        return Map.of("path",path, "queryString",queryString);
+    }
+
+    public static String getUrl(String firstLine) {
+        String[] splited = firstLine.split(" ");
+        String path = splited[1];
+        return path;
+    }
     /**
-     * @param queryString은
-     *            URL에서 ? 이후에 전달되는 field1=value1&field2=value2 형식임
+     * @param queryString은 URL에서 ? 이후에 전달되는 field1=value1&field2=value2 형식임
      * @return
      */
     public static Map<String, String> parseQueryString(String queryString) {
@@ -31,6 +44,8 @@ public class HttpRequestUtils {
         return parseValues(cookies, ";");
     }
 
+
+
     private static Map<String, String> parseValues(String values, String separator) {
         if (Strings.isNullOrEmpty(values)) {
             return Maps.newHashMap();
@@ -45,10 +60,34 @@ public class HttpRequestUtils {
         if(requestMessage==null){
             return "";
         }
-        String s = requestMessage.toString().split(" ")[1];
-        log.debug("[parseRequestedPage] pageUrl ={}", s );
-        return s;
+
+        return requestMessage.toString().split(" ")[1];
     }
+
+
+/*
+    public static Map<String,String> parseRequestMessage(CharSequence requestMessage){
+        if(requestMessage.isEmpty()){
+            return Maps.newHashMap();
+        }
+
+        String[] message = requestMessage.toString().split(" ");
+        Map<String, String> requestUri = parseRequestUri(message[1]);
+
+
+
+        return Map.of("method", message[0]
+                    , "path", requestUri.get("path")
+                    , "queryString", requestUri.getOrDefault("queryString",""));
+
+    }*/
+    private static boolean hasParam(String url){
+        return url.contains("?");
+    }
+
+
+
+
 
     static Pair getKeyValue(String keyValue, String regex) {
         if (Strings.isNullOrEmpty(keyValue)) {

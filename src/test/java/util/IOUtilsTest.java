@@ -35,9 +35,6 @@ public class IOUtilsTest {
         byte[] bytes = Files.readAllBytes(file.toPath());
         String content = new String(bytes, StandardCharsets.UTF_8);
 
-        assertFalse("파일 내용이 비어있습니다.", content.isEmpty());
-
-
-
-    }
+    assertFalse("파일 내용이 비어있습니다.", content.isEmpty());
+}
 }

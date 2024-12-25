@@ -2,9 +2,12 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Map;
+
 import static util.HttpRequestUtils.*;
 import static util.IOUtils.readRequestBody;
 
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.HttpRequestUtils;
@@ -22,8 +25,7 @@ public class RequestHandler extends Thread {
         log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
         try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-             OutputStream out = connection.getOutputStream();
-              DataOutputStream dos = new DataOutputStream(out)
+              DataOutputStream dos = new DataOutputStream(connection.getOutputStream())
         ) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             handleRequest(dos, br);
@@ -35,9 +37,15 @@ public class RequestHandler extends Thread {
     private void handleRequest(DataOutputStream dos, BufferedReader br ) throws IOException {
         StringBuilder request = readRequest(br);
 
-        String pageUrl = parseRequestedPage(request);
+        // Map<String, String> requestMessage = parseRequestMessage(request);
+        String url = HttpRequestUtils.getUrl(br.readLine());
+        Map<String, String> parts = parseUrl(url);
+        String queryString = parts.get("queryString");
+        Map<String, String> params = parseQueryString(queryString);
 
-        byte[] body = readRequestBody(pageUrl);
+        User user = new User(params.get("userId "), params.get("password"), params.get("name"), params.get("email"));
+
+        byte[] body = readRequestBody(parts.get("path"));
         sendResponse(dos, body);
     }
 

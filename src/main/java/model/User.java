@@ -1,5 +1,9 @@
 package model;
 
+import com.google.common.base.Strings;
+
+import java.util.Map;
+
 public class User {
     private String userId;
     private String password;
@@ -27,6 +31,16 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public static User createUser(Map<String, String> params){
+        if(params.isEmpty()){
+            return null;
+        }
+
+        return new User(params.get("userId"), params.get("password"), params.get("name"),params.get("email"));
+
+
     }
 
     @Override
