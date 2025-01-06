@@ -14,17 +14,39 @@ import webserver.RequestHandler;
 
 public class HttpRequestUtils {
     private static final Logger log = LoggerFactory.getLogger(HttpRequestUtils.class);
-
+    private static final String DEFAULT_PATH = "/index.html";
+    /**
+     * URL 을 파싱한다.
+     * @param url - 수신한 url이 없다면 디폴트 /index.html
+     * @return Map<String,String> - path, queryString
+     */
     public static Map<String,String> parseUrl(String url){
         int index = url.indexOf("?");
+        if(index == -1 ){
+            return Map.of("path", url, "queryString", "");
+        }
+
         String path = url.substring(0, index);
         String queryString = url.substring(index+1);
         return Map.of("path",path, "queryString",queryString);
     }
 
+
+    private static String getPath(String url){
+        String[] parts = url.split(" ");
+        return parts[1];
+    }
+
     public static String getUrl(String firstLine) {
-        String[] splited = firstLine.split(" ");
-        String path = splited[1];
+        if(Strings.isNullOrEmpty(firstLine)){
+            return DEFAULT_PATH;
+        }
+
+        String path = getPath(firstLine);
+        if (path.equals("/")){
+            return DEFAULT_PATH;
+        };
+
         return path;
     }
     /**

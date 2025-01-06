@@ -32,9 +32,12 @@ public class IOUtils {
             throw new IllegalArgumentException("path is null or Empty" + path );
         }
 
+        log.info("path - {}", path);
+
         File file = new File("./webapp" + path);
 
         if(file.exists()){
+            log.info("file path - {}", file.toPath());
             return Files.readAllBytes(file.toPath());
         }
 

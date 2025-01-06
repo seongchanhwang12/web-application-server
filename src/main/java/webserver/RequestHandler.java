@@ -35,10 +35,16 @@ public class RequestHandler extends Thread {
         }
     }
     private void handleRequest(DataOutputStream dos, BufferedReader br ) throws IOException {
-        StringBuilder request = readRequest(br);
 
-        // Map<String, String> requestMessage = parseRequestMessage(request);
-        String url = HttpRequestUtils.getUrl(br.readLine());
+        StringBuilder sb = readRequest(br);
+        log.debug("http message : {} ",sb);
+        log.debug("=======================");
+
+
+        String[] httpMessages = sb.toString().split("\n");
+        log.debug("message[0] - {}",httpMessages[0]);
+
+        String url = HttpRequestUtils.getUrl(httpMessages[0]);
         Map<String, String> parts = parseUrl(url);
         String queryString = parts.get("queryString");
         Map<String, String> params = parseQueryString(queryString);

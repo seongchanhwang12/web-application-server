@@ -3,6 +3,7 @@ package util;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.net.http.HttpRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +15,14 @@ import util.HttpRequestUtils.Pair;
 
 public class HttpRequestUtilsTest {
 
+
+    @Test public void parseUrl_null(){
+        String url = "/index.html";
+        Map<String, String> parts = HttpRequestUtils.parseUrl(url);
+        assertThat(parts.get("path"), is("/index.html"));
+        assertThat(parts.get("queryString"), is(""));
+    }
+
     @Test public void parseUrl(){
         String url = "/user/create?userId=javajigi&password=password&name=chan";
         Map<String, String> parts = HttpRequestUtils.parseUrl(url);
@@ -21,6 +30,17 @@ public class HttpRequestUtilsTest {
         assertThat(parts.get("queryString"), is("userId=javajigi&password=password&name=chan"));
     }
 
+    @Test public void getUrl_path_null(){
+        String firstLine = "GET / HTTP/1.1";
+        String url = HttpRequestUtils.getUrl(firstLine);
+        assertThat(url , is("/index.html"));
+    }
+
+    @Test public void getUrl_null(){
+        String firstLine = "";
+        String url = HttpRequestUtils.getUrl(firstLine);
+        assertThat(url , is("/index.html"));
+    }
 
     @Test public void getUrl(){
         String message = "GET /index.html HTTP/1.1\nHost: localhost:8080\nConnection: keep-alive\nAccept: */*";
