@@ -27,22 +27,6 @@ public class IOUtils {
         return String.copyValueOf(body);
     }
 
-    public static byte [] readRequestBody(String path) throws IOException {
-        if(Strings.isNullOrEmpty(path)){
-            throw new IllegalArgumentException("path is null or Empty" + path );
-        }
 
-        log.info("path - {}", path);
-
-        File file = new File("./webapp" + path);
-
-        if(file.exists()){
-            log.info("file path - {}", file.toPath());
-            return Files.readAllBytes(file.toPath());
-        }
-
-        throw new PageNotFoundException("page not found : " + path  );
-
-    }
 
 }

@@ -10,10 +10,25 @@ import java.util.Map;
 import model.User;
 import org.junit.Test;
 
+import org.junit.jupiter.api.DisplayName;
 import util.HttpRequestUtils.Pair;
 
 
 public class HttpRequestUtilsTest {
+
+
+    @Test public void getContentLength(){
+        // given
+        String httpRequest = "Content-Length: 59\n";
+
+        // when
+        int contentLength = HttpRequestUtils.getContentLength(httpRequest);
+
+        // then
+        assertThat(contentLength, is(59));
+
+
+    }
 
 
     @Test public void parseUrl_null(){
@@ -47,6 +62,28 @@ public class HttpRequestUtilsTest {
         String[] splited = message.split(" ");
         assertThat(splited[1] , is("/index.html"));
     }
+
+    @Test public void getAcceptHeader(){
+        //given
+        String line = "Accept: text/css, */*;q=0.1";
+        String[] tokens = line.split(":");
+
+        String value = HttpRequestUtils.getAcceptHeader(line);
+        assertThat(value , is("text/css, */*;q=0.1"));
+    }
+
+    @Test public void getMimeType(){
+
+       // int start = value.indexOf("text/css");
+        //int end = value.indexOf(",");
+        //String mimeType = value.substring(start, end);
+    }
+
+        // text/css면, 응답을 text/css로 한다.
+
+
+
+
 
 /*
 

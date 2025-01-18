@@ -38,12 +38,12 @@ public class HttpRequestUtils {
     }
 
     public static String getUrl(String firstLine) {
-        if(Strings.isNullOrEmpty(firstLine)){
+        if(Strings.isNullOrEmpty(firstLine) ){
             return DEFAULT_PATH;
         }
 
         String path = getPath(firstLine);
-        if (path.equals("/")){
+        if (path.equals("/")) {
             return DEFAULT_PATH;
         };
 
@@ -67,6 +67,9 @@ public class HttpRequestUtils {
     }
 
 
+    public static String getReturnUrl(boolean isLogin) {
+        return isLogin ? "/index.html" : "/user/list.html";
+    }
 
     private static Map<String, String> parseValues(String values, String separator) {
         if (Strings.isNullOrEmpty(values)) {
@@ -125,7 +128,21 @@ public class HttpRequestUtils {
     }
 
     public static Pair parseHeader(String header) {
-        return getKeyValue(header, ": ");
+        return null;
+    }
+
+    public static int getContentLength(String s) {
+        return Integer.parseInt(s.split(":")[1].trim());
+
+
+    }
+
+    public static String getAcceptHeader(String line) {
+        String[] split = line.split(":");
+        if(split.length > 1){
+            return split[1].trim();
+        }
+        return "*/*";
     }
 
     public static class Pair {
